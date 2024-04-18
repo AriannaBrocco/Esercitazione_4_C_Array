@@ -16,7 +16,7 @@ bool ImportaValori(const string& fileName,
                    double*& w,
                    double*& r)
 {
-    // Aprire il file
+    // Apre il file
     ifstream file;
     file.open(fileName);
 
@@ -26,7 +26,7 @@ bool ImportaValori(const string& fileName,
         return false;
     }
 
-    // Ottenere i vari valori
+    // Ottiene i vari valori, cerca nella riga il ; e converte la parte di stringa dopo di esso in un double
     string riga;
 
     while (!file.eof())
@@ -51,6 +51,7 @@ bool ImportaValori(const string& fileName,
     unsigned int valore2 = stod(dopo_pev2);
     n = valore2;
 
+    // Ciclo che si ripete per tutti gli 8 elementi degli arrays saltando la riga che contiene 'w;r' e prendendo il primo elemento dalla parte prima del ; e il secondo dopo.
     w = new double[n];
     r = new double[n];
     for (unsigned int i = 0; i<n; i++)
