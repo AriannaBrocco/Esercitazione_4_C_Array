@@ -21,7 +21,7 @@ int main()
         return -1;
     }
     else
-        cout<< "L'importo ha avuto successo: S=" << S<< ", n= "<< n<< endl;
+        cout<< "L'importo ha avuto successo"<< endl;
 
     double rate = rateOfReturn(S, n, w, r);
     double val =finalValue(S, n, w, r);
