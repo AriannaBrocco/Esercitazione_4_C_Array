@@ -6,9 +6,18 @@
 
 #include <vector>
 #include <string>
+#include <iomanip>
 
 
 using namespace std;
+
+double string_to_double(const string& stringa) {
+    istringstream stringtodouble(stringa);
+    double result;
+    stringtodouble >> result;
+    return result;
+}
+
 
 bool ImportaValori(const string& fileName,
                    size_t& n,
@@ -28,48 +37,31 @@ bool ImportaValori(const string& fileName,
 
     // Ottiene i vari valori, cerca nella riga il ; e converte la parte di stringa dopo di esso in un double
     string riga;
+    getline(file, riga);
+    istringstream convertElemento(riga);
+    char a, b;
+    convertElemento >> a >> b >> S;
 
-    while (!file.eof())
-    {
-        getline(file, riga);
-    }
-    istringstream convertElemento;
-    convertElemento.str(riga);
-    size_t posizione = riga.find(';');
-    string dopo_pev = riga.substr(posizione+1);
-    double valore = stod(dopo_pev);
-    S = valore;
+    getline(file, riga);
+    istringstream convertElemento2(riga);
+    convertElemento2 >> a >> b >> n;
 
-    while (!file.eof())
-    {
-        getline(file, riga);
-    }
-    istringstream convertElemento2;
-    convertElemento2.str(riga);
-    size_t posizione2 = riga.find(';');
-    string dopo_pev2 = riga.substr(posizione2+1);
-    unsigned int valore2 = stod(dopo_pev2);
-    n = valore2;
 
     // Ciclo che si ripete per tutti gli 8 elementi degli arrays saltando la riga che contiene 'w;r' e prendendo il primo elemento dalla parte prima del ; e il secondo dopo.
     w = new double[n];
     r = new double[n];
-    for (unsigned int i = 0; i<n; i++)
+    for (unsigned int i = 0; i<n; i++){
         while (!file.eof())
         {
             getline(file, riga);
             if(riga[0] != 'w')
                 break;
-            istringstream convertElemento3;
-            convertElemento3.str(riga);
-            size_t posizione3 = riga.find(';');
-            string prima_pev3 = riga.substr(0,posizione3);
-            double valore3 = stod(prima_pev3);
-            string dopo_pev3 = riga.substr(posizione3+1);
-            double valore4 = stod(dopo_pev3);
-            w[i] = valore3;
-            r[i] = valore4;
         }
+        istringstream convertElemento3(riga);
+        char b;
+        convertElemento3 >> w[i] >> b >> r[i];
+
+    }
 
 
     file.close();
@@ -78,14 +70,25 @@ bool ImportaValori(const string& fileName,
 }
 
 
+double finalValue(double& S,
+                    const size_t& n,
+                    const double* const& w,
+                    const double* const& r)
+{
+    double operazione = 0.0;
+    for (unsigned int i = 0; i < n; i++)
+        operazione += (1 + r[i])*(w[i]*S);
+
+    return operazione;
+}
 double rateOfReturn(double& S,
                     const size_t& n,
                     const double* const& w,
                     const double* const& r)
 {
-    double operazione = 0;
+    double operazione = 0.0;
     for (unsigned int i = 0; i < n; i++)
-        operazione += (1 + r[i])*(w[i]*(S));
+        operazione += (r[i])*(w[i]);
 
     return operazione;
 }
@@ -95,7 +98,8 @@ bool EsportaRisultati(const string& outputFileName,
                       size_t& n,
                       const double* const& r,
                       const double* const& w,
-                      double& operazione,
+                      double& final_Value,
+                      double& rate_Of_Return,
                       double& S)
 {
     // Aprire il file
@@ -109,11 +113,21 @@ bool EsportaRisultati(const string& outputFileName,
 
     file << "S = " << S << ", n = " << n << endl;
 
-    file<< "w = "<< w << endl;
-    file<< "r = "<< r << endl;
+    file<< "w = [ ";
+    for (unsigned int i = 0; i<n; i++){
+        file<< w[i]<< " ";}
+    file << "]" << endl;
 
-    file<< "Rate of return of the portfolio: "<< operazione/S << endl;
-    file<< "V: " << operazione << endl;
+
+    file<< "w = [ ";
+    for (unsigned int i = 0; i<n; i++){
+        file<< r[i]<< " ";}
+    file << "]" << endl;
+
+
+    file<< "Rate of return of the portfolio: " << fixed << setprecision(4) << rate_Of_Return << endl;
+
+    file<< "V: "  << fixed << setprecision(2) << final_Value << endl;
 
 
     // Close File

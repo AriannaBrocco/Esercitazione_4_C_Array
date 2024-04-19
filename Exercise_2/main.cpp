@@ -7,13 +7,11 @@
 using namespace std;
 
 
-
-
 int main()
 {
     string fileName = "data.csv";
     size_t n = 0;
-    double S = 0;
+    double S = 0.0;
     double* w = nullptr;
     double* r = nullptr;
 
@@ -23,13 +21,15 @@ int main()
         return -1;
     }
     else
-        cout<< "L'importo ha avuto successo: n= "<< n<< " w = "<< w << " r = "<< r << endl;
+        cout<< "L'importo ha avuto successo: S=" << S<< ", n= "<< n<< endl;
 
     double rate = rateOfReturn(S, n, w, r);
+    double val =finalValue(S, n, w, r);
     cout << "Rate of Return: "<< rate << endl;
+    cout << "Final Value: "<< val << endl;
 
     string outputFileName = "result.txt";
-    if (!EsportaRisultati(outputFileName,n, r, w, rate, S))
+    if (!EsportaRisultati(outputFileName,n, r, w, val, rate, S))
     {
         cerr << "Qualcosa è andato storto nell'operazione di esportazione"<< endl;
         return -1;
