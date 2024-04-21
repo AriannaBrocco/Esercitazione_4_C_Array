@@ -3,8 +3,6 @@
 
 using namespace std;
 
-double string_to_double(const string& str);
-
 bool ImportaValori(const string& fileName,
                    size_t& n,
                    double& S,
@@ -16,8 +14,7 @@ double finalValue(double& S,
                   const double* const& w,
                   const double* const& r);
 
-double rateOfReturn(double& S,
-                    const size_t& n,
+double rateOfReturn(const size_t& n,
                     const double* const& w,
                     const double* const& r);
 

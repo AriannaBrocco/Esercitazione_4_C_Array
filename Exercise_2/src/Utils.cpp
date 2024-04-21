@@ -4,19 +4,10 @@
 #include "fstream"
 #include "sstream"
 
-#include <vector>
-#include <string>
 #include <iomanip>
 
 
 using namespace std;
-
-double string_to_double(const string& stringa) {
-    istringstream stringtodouble(stringa);
-    double result;
-    stringtodouble >> result;
-    return result;
-}
 
 
 bool ImportaValori(const string& fileName,
@@ -35,7 +26,7 @@ bool ImportaValori(const string& fileName,
         return false;
     }
 
-    // Ottiene i vari valori, cerca nella riga il ; e converte la parte di stringa dopo di esso in un double
+    // Ottiene i vari valori e li assegna ad S e a n
     string riga;
     getline(file, riga);
     istringstream convertElemento(riga);
@@ -47,7 +38,8 @@ bool ImportaValori(const string& fileName,
     convertElemento2 >> a >> b >> n;
 
 
-    // Ciclo che si ripete per tutti gli 8 elementi degli arrays saltando la riga che contiene 'w;r' e prendendo il primo elemento dalla parte prima del ; e il secondo dopo.
+    // Ciclo che si ripete per tutti gli 8 elementi degli arrays saltando la riga che contiene 'w;r'
+    // Assegna il primo elemento a w e il secondo a r
     w = new double[n];
     r = new double[n];
     for (unsigned int i = 0; i<n; i++){
@@ -69,7 +61,7 @@ bool ImportaValori(const string& fileName,
     return true;
 }
 
-
+// Calcola il valore finale del portafoglio
 double finalValue(double& S,
                     const size_t& n,
                     const double* const& w,
@@ -81,8 +73,8 @@ double finalValue(double& S,
 
     return operazione;
 }
-double rateOfReturn(double& S,
-                    const size_t& n,
+
+double rateOfReturn(const size_t& n,
                     const double* const& w,
                     const double* const& r)
 {
@@ -93,7 +85,7 @@ double rateOfReturn(double& S,
     return operazione;
 }
 
-
+// Esporta i risultati sul file results
 bool EsportaRisultati(const string& outputFileName,
                       size_t& n,
                       const double* const& r,
@@ -102,7 +94,7 @@ bool EsportaRisultati(const string& outputFileName,
                       double& rate_Of_Return,
                       double& S)
 {
-    // Aprire il file
+    // Apre il file
     ofstream file;
     file.open(outputFileName);
     if (file.fail())
@@ -110,8 +102,8 @@ bool EsportaRisultati(const string& outputFileName,
         cerr << "Il file: " << outputFileName << "non esiste" << endl;
         return false;
     }
-
-    file << "S = " << S << ", n = " << n << endl;
+    // Stampa i valori sul file
+    file << "S = " << fixed << setprecision(2) << S << ", n = " << n << endl;
 
     file<< "w = [ ";
     for (unsigned int i = 0; i<n; i++){
@@ -119,7 +111,7 @@ bool EsportaRisultati(const string& outputFileName,
     file << "]" << endl;
 
 
-    file<< "w = [ ";
+    file<< "r = [ ";
     for (unsigned int i = 0; i<n; i++){
         file<< r[i]<< " ";}
     file << "]" << endl;
@@ -129,8 +121,6 @@ bool EsportaRisultati(const string& outputFileName,
 
     file<< "V: "  << fixed << setprecision(2) << final_Value << endl;
 
-
-    // Close File
     file.close();
 
     return true;
